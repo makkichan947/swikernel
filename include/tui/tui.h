@@ -1,7 +1,7 @@
 #ifndef TUI_H
 #define TUI_H
 
-#include "swikernel.h"
+#include "../swikernel.h"
 
 // TUI 初始化和管理
 int tui_init(void);
@@ -27,4 +27,4 @@ void show_current_kernel_dialog(void);
 void show_remove_kernel_dialog(KernelInfo *kernels);
 void show_kernel_info_dialog(KernelInfo *kernels);
 
-#endif // TUI_H
+#endif

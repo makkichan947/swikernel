@@ -60,10 +60,10 @@ wget -qO- https://raw.githubusercontent.com/makkichan947/swikernel/main/scripts/
 ### 分步安装
 ```bash
 # 1. 下载最新发布版本
-wget https://github.com/makkichan947/swikernel/releases/latest/download/swikernel-linux-x86_64.tar.gz
+wget https://github.com/makkichan947/swikernel/releases/latest/download/swikernel-linux-x86_64.tar.xz
 
 # 2. 解压文件
-tar -xzf swikernel-linux-x86_64.tar.gz
+tar -xzf swikernel-linux-x86_64.tar.xz
 cd swikernel
 
 # 3. 运行安装程序

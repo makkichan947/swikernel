@@ -12,7 +12,7 @@ LD = ld
 AR = ar
 
 # 编译标志
-CFLAGS = -Wall -Wextra -std=c99 -D_POSIX_C_SOURCE=200809L
+CFLAGS = -Wall -Wextra -O2 -g -I./include -I./src
 CFLAGS_DEBUG = -g -O0 -DDEBUG -fsanitize=address
 CFLAGS_RELEASE = -O2 -DNDEBUG -flto
 CFLAGS_WARNING = -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes
@@ -49,7 +49,7 @@ STATIC_LIB = $(LIB_DIR)/libswikernel.a
 INCLUDES = -I$(INCLUDE_DIR) -I$(SRC_DIR)
 
 # 外部库
-LIBS = -ldialog -lncurses
+LIBS = -ldialog -lncurses -lm
 
 # 构建模式
 BUILD_MODE ?= RELEASE
