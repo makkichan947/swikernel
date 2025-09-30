@@ -1,0 +1,14 @@
+#ifndef VERSION_H
+#define VERSION_H
+
+#define SWIKERNEL_VERSION "1.0.0"
+#define SWIKERNEL_AUTHOR "Yaku Makki"
+#define SWIKERNEL_COPYRIGHT "2025 Yaku Makki"
+
+// 特性支持
+#define FEATURE_TUI 1
+#define FEATURE_AUTOCOMPLETE 1
+#define FEATURE_ROLLBACK 1
+#define FEATURE_LOGGING 1
+
+#endif // VERSION_H
