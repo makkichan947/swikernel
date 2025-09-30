@@ -113,14 +113,6 @@ make release
 sudo make install
 ```
 
-### 方法四: Docker 运行
-```bash
-docker run -it --privileged \
-  -v /boot:/boot \
-  -v /lib/modules:/lib/modules \
-  swikernel/swikernel:latest
-```
-
 ## 📖 使用指南
 
 ### TUI 界面使用
