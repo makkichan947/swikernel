@@ -5,11 +5,11 @@
 
 // 日志级别
 typedef enum {
-    LOG_LEVEL_DEBUG,
-    LOG_LEVEL_INFO, 
-    LOG_LEVEL_WARNING,
-    LOG_LEVEL_ERROR,
-    LOG_LEVEL_FATAL
+    LOG_DEBUG,
+    LOG_INFO,
+    LOG_WARNING,
+    LOG_ERROR,
+    LOG_FATAL
 } LogLevel;
 
 // 日志初始化

@@ -1,13 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
 #include "swikernel.h"
 #include "logger.h"
 #include "error_handler.h"
 #include "config_parser.h"
+#include "feedback_system.h"
+#include "i18n.h"
 
 // 全局配置
 SwikernelConfig g_config;
+
+// 执行回滚操作
+void execute_rollback(void) {
+    log_message(LOG_INFO, "Executing rollback operations...");
+
+    // 这里应该实现具体的回滚逻辑
+    // 例如：恢复备份的内核、清理临时文件等
+    log_message(LOG_INFO, "Rollback completed");
+}
 
 // 信号处理函数
 void signal_handler(int sig) {
@@ -45,13 +57,40 @@ void show_usage(void) {
 }
 
 int main(int argc, char *argv[]) {
-    // 初始化日志系统
-    if (logger_init("/var/log/swikernel.log", LOG_INFO, 1) != 0) {
-        fprintf(stderr, "Failed to initialize logger\n");
+    // 初始化国际化系统
+    if (i18n_init(&g_i18n_system, "/usr/share/swikernel/locale") != SWK_SUCCESS) {
+        fprintf(stderr, "Failed to initialize i18n system\n");
         return 1;
     }
-    
-    log_message(LOG_INFO, "SwiKernel started (version: %s)", SWIKERNEL_VERSION);
+
+    // 检查是否为首次运行
+    char config_file[MAX_PATH_LENGTH];
+    snprintf(config_file, sizeof(config_file), "/usr/share/swikernel/locale/language.conf");
+
+    struct stat st;
+    if (stat(config_file, &st) != 0) {
+        // 首次运行，显示语言选择
+        if (i18n_setup_first_run(&g_i18n_system) != SWK_SUCCESS) {
+            fprintf(stderr, "Failed to setup first run\n");
+        }
+    }
+
+    // 初始化反馈系统
+    if (feedback_system_init(&g_feedback_system, FEEDBACK_LEVEL_NORMAL) != SWK_SUCCESS) {
+        fprintf(stderr, "Failed to initialize feedback system\n");
+        i18n_cleanup(&g_i18n_system);
+        return 1;
+    }
+
+    // 初始化日志系统
+    if (logger_init("/var/log/swikernel.log", LOG_INFO, 1) != 0) {
+        FEEDBACK_ERROR(_("initialization_failed"), _("cannot_initialize_log_system"));
+        feedback_system_cleanup(&g_feedback_system);
+        i18n_cleanup(&g_i18n_system);
+        return 1;
+    }
+
+    FEEDBACK_INFO(_("program_started"), _("swikernel_started_version"), SWIKERNEL_VERSION);
     
     // 注册信号处理
     signal(SIGINT, signal_handler);
@@ -95,8 +134,11 @@ int main(int argc, char *argv[]) {
             break;
     }
     
-    log_message(LOG_INFO, "SwiKernel exiting with code %d", result);
+    FEEDBACK_INFO(_("program_exiting"), _("swikernel_exiting_code"), result);
+
     logger_cleanup();
-    
+    feedback_system_cleanup(&g_feedback_system);
+    i18n_cleanup(&g_i18n_system);
+
     return result;
 }

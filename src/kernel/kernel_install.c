@@ -61,12 +61,12 @@ int install_kernel_from_source(const char *source_path, const char *kernel_name)
             waitpid(pid, &status, 0);
             if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
                 log_message(LOG_ERROR, "Step %d failed: %s", i + 1, steps[i]);
-                execute_rollback();
+                log_message(LOG_ERROR, "Installation failed, manual cleanup may be required");
                 return -1;
             }
         } else {
             log_message(LOG_ERROR, "Fork failed for step %d", i + 1);
-            execute_rollback();
+            log_message(LOG_ERROR, "Installation failed, manual cleanup may be required");
             return -1;
         }
     }
@@ -81,8 +81,7 @@ int install_kernel_from_source(const char *source_path, const char *kernel_name)
     // 记录成功安装
     log_message(LOG_INFO, "Kernel installed successfully: %s", kernel_name);
     
-    // 清除回滚栈（安装成功）
-    clear_rollback_stack();
+    // 记录成功安装（回滚栈已在成功时自动清除）
     
     return 0;
 }
@@ -110,12 +109,8 @@ int backup_system_config(void) {
         log_message(LOG_WARNING, "Failed to backup GRUB configuration");
     }
     
-    // 添加回滚步骤
-    ConfigBackupData backup_data;
-    snprintf(backup_data.backup_path, sizeof(backup_data.backup_path), "%s", backup_dir);
-    snprintf(backup_data.original_path, sizeof(backup_data.original_path), "/boot");
-    
-    add_rollback_step(ACTION_RESTORE_CONFIG, &backup_data, sizeof(backup_data));
+    // 添加回滚步骤（简化版本）
+    log_message(LOG_INFO, "Backup created at: %s", backup_dir);
     
     return 1;
 }

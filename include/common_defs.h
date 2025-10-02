@@ -74,14 +74,7 @@ typedef enum {
     KERNEL_TYPE_CUSTOM
 } KernelType;
 
-// 日志级别
-typedef enum {
-    LOG_LEVEL_DEBUG,
-    LOG_LEVEL_INFO,
-    LOG_LEVEL_WARNING,
-    LOG_LEVEL_ERROR,
-    LOG_LEVEL_FATAL
-} LogLevel;
+// 日志级别已在logger.h中定义，避免重复定义
 
 // 进度回调函数类型
 typedef void (*ProgressCallback)(const char* phase, int percent, void* user_data);
